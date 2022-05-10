@@ -87,7 +87,13 @@ interface{}是go中的空接口，任意类型都实现了空接口，因此当�
 golang没有类的关键字，struct其实就声明了一个类
 [golang中的类和类声明函数](https://blog.csdn.net/qq756684177/article/details/81518823)
 
-# 20220510开发记录
+# golang单例模式,sync.once
+
+# snowflakes算法
+[算法思想 & go实现](https://zhuanlan.zhihu.com/p/373485947)
+![](../../Image/Snowflake.jpg)
+
+# **20220510开发记录**
 ## 提问
 我本来是希望publish post操作完成后，返回给用户的数据Data，是包含了 topic title,post content,timestamp create_time，但是这里就涉及到了insert和交叉查询
 第一步，把对应的post内容组织好后，insert到post文件中
@@ -99,8 +105,4 @@ golang没有类的关键字，struct其实就声明了一个类
 
 ## 生成随机id和创建时间戳是在service层做的，repository只需要负责并发安全地把数据写入 文件map/数据库中
 
-# golang单例模式,sync.once
-
-# snowflakes算法
-[算法思想 & go实现](https://zhuanlan.zhihu.com/p/373485947)
-![](../../Image/Snowflake.jpg)
+## 待补充：并发测试
