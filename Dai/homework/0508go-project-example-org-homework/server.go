@@ -3,8 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/Moonlight-Zhao/go-project-example/cotroller"
-	"github.com/Moonlight-Zhao/go-project-example/repository"
+	"example-proj/cotroller"
+	"example-proj/repository"
+
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
@@ -19,7 +20,11 @@ func main() {
 		c.JSON(200, data)
 	})
 	r.POST("/community/page/post", func(c *gin.Context) {
-		topicId := c.Param("topicId")
+		topicId, _ := c.GetPostForm("topicId")
+		content, _ := c.GetPostForm("content")
+		data := cotroller.PublishPost(topicId, content)
+		c.JSON(200, data)
+
 	})
 	err := r.Run()
 	if err != nil {

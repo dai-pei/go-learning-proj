@@ -2,8 +2,9 @@ package service
 
 import (
 	"errors"
-	"github.com/Moonlight-Zhao/go-project-example/repository"
 	"sync"
+
+	"example-proj/repository"
 )
 
 type PageInfo struct {
@@ -25,8 +26,8 @@ type QueryPageInfoFlow struct {
 	topicId  int64
 	pageInfo *PageInfo
 
-	topic   *repository.Topic
-	posts   []*repository.Post
+	topic *repository.Topic
+	posts []*repository.Post
 }
 
 func (f *QueryPageInfoFlow) Do() (*PageInfo, error) {

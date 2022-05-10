@@ -3,7 +3,7 @@ package cotroller
 import (
 	"strconv"
 
-	"github.com/Moonlight-Zhao/go-project-example/service"
+	"example-proj/service"
 )
 
 type PageData struct {
@@ -11,6 +11,7 @@ type PageData struct {
 	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
 }
+
 func QueryPageInfo(topicIdStr string) *PageData {
 	topicId, err := strconv.ParseInt(topicIdStr, 10, 64)
 	if err != nil {
