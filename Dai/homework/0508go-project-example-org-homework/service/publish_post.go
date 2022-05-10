@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"time"
 	"unicode/utf16"
-
-	idworker "github.com/gitstliu/go-id-worker"
 )
 
 // service中query_page_info的功能
@@ -32,12 +30,11 @@ import (
 // 封装数据
 // 调用dao写入文件
 
-var idGen *idworker.IdWorker
-
-func init() {
-	idGen = &idworker.IdWorker{}
-	idGen.InitIdWorker(1, 1)
-}
+// Init函数一般是先于main函数执行，所以任何文件内定义的init函数都会被执行 初始化顺序：变量初始化->init()->main()
+// func init() {
+// 	idGen = &idworker.IdWorker{}
+// 	idGen.InitIdWorker(1, 1)
+// }
 
 func PublishPost(topicId int64, content string) (int64, error) {
 	fmt.Println("service Publish Post")
@@ -80,7 +77,8 @@ func (f *PublishPostFlow) publish() error {
 		Content:    f.content,
 		CreateTime: time.Now().Unix(),
 	}
-	id, err := idGen.NextId()
+	id, err := generateIdBySnowFlake(100, 100)
+
 	if err != nil {
 		return err
 	}
@@ -90,4 +88,34 @@ func (f *PublishPostFlow) publish() error {
 	}
 	f.postId = post.Id
 	return nil
+}
+
+var lastTimeStamp int64 = 0
+var curTimeStamp int64 = lastTimeStamp
+var sn int64 = 0
+
+// snowflake算法
+// https://blog.csdn.net/fly910905/article/details/82054196
+func generateIdBySnowFlake(machineId int64, datacenterId int64) (int64, error) {
+	// 如果想让时间戳范围更长，也可以减去一个日期
+	curTimeStamp := time.Now().UnixNano() / 1000000
+
+	if curTimeStamp == lastTimeStamp {
+		// 2的12次方 -1 = 4095，每毫秒可产生4095个ID
+		if sn > 4095 {
+			time.Sleep(time.Millisecond)
+			curTimeStamp = time.Now().UnixNano() / 1000000
+			sn = 0
+		}
+	} else {
+		sn = 0
+	}
+	sn++
+	lastTimeStamp = curTimeStamp
+	// 应为时间戳后面有22位，所以向左移动22位
+	curTimeStamp = curTimeStamp << 22
+	machineId = machineId << 17
+	datacenterId = datacenterId << 12
+	// 通过与运算把各个部位连接在一起
+	return int64(curTimeStamp) | machineId | datacenterId | sn, nil
 }
