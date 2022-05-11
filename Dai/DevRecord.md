@@ -106,3 +106,11 @@ golang没有类的关键字，struct其实就声明了一个类
 ## 生成随机id和创建时间戳是在service层做的，repository只需要负责并发安全地把数据写入 文件map/数据库中
 
 ## 待补充：并发测试
+
+# **20220511开发记录**
+## graphviz安装踩坑
+下载了官网最新版本3.0.0，配置了环境变量后无法使用dot命令，查看博客后发现解决方法：https://blog.csdn.net/mule2/article/details/109114677
+可能是该版本安装包bin下缺少config6文件，要么自己新建一个，要么安装其他版本的
+然而并不管用，所以在vscode的cmd里面用命令
+SET path=E:\Software\Programs\Graphviz\bin
+之后，就能够成功调用dot.exe了
